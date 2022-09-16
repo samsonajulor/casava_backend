@@ -1,7 +1,7 @@
-import UserModel from '../../models/user/user.model';
+import { UserService } from '../service';
 import Tools from '../../utils';
 
-const { update, find, create, remove } = new UserModel();
+const { update, findAll, findOne, create, remove } = UserService;
 const { getEncryptedPassword, getDecryptedPassword, getRandomNumber, errorResponse, successResponse, createToken } = Tools;
 
 class Test {
@@ -11,7 +11,7 @@ class Test {
 
   async remove(req, res) {
     try {
-      const user = await find({ email: req.body.email });
+      const user = await findOne({ email: req.body.email });
 
       !user && errorResponse(res, 'no such user', 400, ':-(');
 
@@ -23,7 +23,7 @@ class Test {
 
   async update(req, res) {
     try {
-      const user = await find({ userId: req.query.userId });
+      const user = await findOne({ userId: req.query.userId });
       if (!user) return res.status(404).send({ Message: 'User does not exist' });
 
       await update(user, req.body);
@@ -38,20 +38,19 @@ class Test {
     try {
       const { firstName, lastName, email, password } = req.body;
       // Check if the user already exist in the database
-      let user = await find({ email });
+      let user = await findOne({ email });
 
       if (user) return res.status(400).send({ Message: 'User already exist' });
 
       const hashedPassword = await getEncryptedPassword(password),
-        randomNumber = getRandomNumber();
 
       const newUser = await create({
         firstName,
         lastName,
         email,
-        emailToken: randomNumber.toString(),
         password: hashedPassword,
-        isVerified: false,
+        accountId,
+        friendList: []
       });
 
       return successResponse(res, 'user created successfully', newUser, 201);
@@ -66,7 +65,7 @@ class Test {
       const { email, password } = req.body;
 
       // Check if the user already exist in the database
-      const user = await find({ email });
+      const user = await findOne({ email });
       if (!user) return res.status(404).send({ Message: 'User not found' });
 
       // Decrypt the user password and compare

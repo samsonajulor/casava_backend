@@ -1,7 +1,5 @@
-import { post } from 'axios';
-
-import { DBConnection } from './database_connection';
-import UserModel from './user.model';
+import { DBConnection } from '../database_connection';
+import { UserModel } from '../models';
 
 class User {
   constructor(...args) {
@@ -11,7 +9,7 @@ class User {
   async findOne({ userId, email }) {
     try {
       (async () => {
-        await DBConnection.sequelize.sync({ alter: true });
+        await DBConnection.sequelize.sync();
         const profile = await UserModel.findOne({ where: { [Op.or]: [{ id: userId }, { email }] } });
         return profile;
       })();
@@ -23,7 +21,7 @@ class User {
   async findAll() {
     try {
       (async () => {
-        await DBConnection.sequelize.sync({ alter: true });
+        await DBConnection.sequelize.sync();
         const profile = await UserModel.findAll();
         return profile;
       })();
@@ -34,13 +32,16 @@ class User {
 
   async update(user, payload) {
     try {
-      for (input in payload) {
-        user[input] = input || user[input];
-      }
+      (async () => {
+        await DBConnection.sequelize.sync();
+        for (input in payload) {
+          user[input] = input || user[input];
+        }
 
-      await user.save();
+        await user.save();
 
-      return user;
+        return user;
+      })();
     } catch (err) {
       console.error(err);
     }
@@ -48,16 +49,19 @@ class User {
 
   async create({ firstName, lastName, email, emailToken, password, isVerified }) {
     try {
-      const user = await UserModel.create({
-        firstName,
-        lastName,
-        email,
-        emailToken,
-        password,
-        isVerified,
-      });
+      (async () => {
+        await DBConnection.sequelize.sync();
+        const user = await UserModel.create({
+          firstName,
+          lastName,
+          email,
+          emailToken,
+          password,
+          isVerified,
+        });
 
-      return user;
+        return user;
+      })();
     } catch (err) {
       console.error(err);
     }
@@ -65,7 +69,10 @@ class User {
 
   async remove({ userId, email }) {
     try {
-      await UserMongo.destroy({ where: { [Op.or]: [{ id: userId }, { email }] } });
+      (async () => {
+        await DBConnection.sequelize.sync();
+        await UserModel.destroy({ where: { [Op.or]: [{ id: userId }, { email }] } });
+      })();
     } catch (error) {
       console.log(error);
     }
