@@ -14,6 +14,8 @@ const Account = DBConnection.sequelize.define('account', {
     allowNull: false,
     validate: {
       isLowerCase: true,
+      min: 10,
+      max: 10,
     },
   },
   accountName: {

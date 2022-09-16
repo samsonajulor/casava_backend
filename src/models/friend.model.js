@@ -9,14 +9,6 @@ const Friend = DBConnection.sequelize.define('friend', {
       isLowerCase: true,
     },
   },
-  email: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-    validate: {
-      isLowerCase: true,
-      isEmail: true,
-    },
-  },
   isFavorite: {
     type: DataTypes.TEXT,
     allowNull: false,

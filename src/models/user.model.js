@@ -22,6 +22,7 @@ const User = DBConnection.sequelize.define('user', {
     validate: {
       isLowerCase: true,
       isEmail: true,
+      isUnique: true,
     },
   },
   password: {
