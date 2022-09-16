@@ -2,9 +2,9 @@ import jwt from 'jsonwebtoken';
 import _ from 'lodash';
 
 import Tools from '../utils';
-import UserModel from '../models/user/user.model';
+import { UserService } from '../service';
 
-const { find } = new UserModel(),
+const { findOne } = UserService,
   { errorResponse, successResponse } =
   Tools;
 
@@ -24,7 +24,7 @@ class Authenticator {
       if (token) {
         req.user = decoded;
         let { email } = decoded;
-        let user = await find({ email });
+        let user = await findOne({ email });
         let selected = _.pick(user, ['_id', 'firstName', 'lastName', 'email']);
         req.user = selected;
         next();

@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-import { DBConnection } from './database_connection';
+import { DBConnection } from '../database_connection';
 
 const Friend = DBConnection.sequelize.define('friend', {
   fullName: {

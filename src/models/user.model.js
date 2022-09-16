@@ -36,10 +36,6 @@ const User = DBConnection.sequelize.define('user', {
     type: DataTypes.TEXT,
     allowNull: true,
   },
-  friendList: {
-    type: DataTypes.ENUM(),
-    allowNull: true,
-  },
 });
 
 export default User;

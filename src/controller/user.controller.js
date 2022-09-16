@@ -1,10 +1,10 @@
 import { UserService } from '../service';
-import Tools from '../../utils';
+import Tools from '../utils';
 
 const { update, findAll, findOne, create, remove } = UserService;
 const { getEncryptedPassword, getDecryptedPassword, getRandomNumber, errorResponse, successResponse, createToken } = Tools;
 
-class Test {
+class User {
   constructor(...args) {
     this.args = args;
   }
@@ -42,7 +42,7 @@ class Test {
 
       if (user) return res.status(400).send({ Message: 'User already exist' });
 
-      const hashedPassword = await getEncryptedPassword(password),
+      const hashedPassword = await getEncryptedPassword(password);
 
       const newUser = await create({
         firstName,
@@ -86,4 +86,4 @@ class Test {
   }
 }
 
-export default Test;
+export default User;

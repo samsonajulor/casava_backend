@@ -1,3 +1,4 @@
+import { Model, DataTypes } from 'sequelize';
 import User from './user.model';
 import Friend from './friend.model';
 import Account from './account.model';
