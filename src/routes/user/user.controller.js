@@ -12,11 +12,12 @@ class Test {
   async get(req, res) {
     try {
       const user = await find({ userId: req.query.userId });
-      if (!user || user.length == 0) return res.status(404).send({ Message: 'User does not exist. You might need to create one' });
+      if (!user || user.length == 0)
+        return errorResponse(res, 'User does not exist. You might need to create one', 404, ':-(');
 
       return successResponse(res, 'user(s) retrieved successfully', user, 200);
     } catch (error) {
-      console.log(error);
+      return errorResponse(res, 'Some error occurred', 500, error.message);
     }
   }
 
@@ -24,24 +25,26 @@ class Test {
     try {
       const user = await find({ email: req.body.email });
 
-      (!user || user.length == 0) && errorResponse(res, 'no such user', 400, ':-(');
+      if (!user || user.length == 0) return errorResponse(res, 'no such user', 400, ':-(');
 
       await remove({ email: req.body.email });
 
       return successResponse(res, 'user removed successfully', ':-)', 200);
-    } catch (error) {}
+    } catch (error) {
+      return errorResponse(res, 'Some error occurred', 500, error.message);
+    }
   }
 
   async update(req, res) {
     try {
       const user = await find({ userId: req.query.userId });
-      if (!user) return res.status(404).send({ Message: 'User does not exist' });
+      if (!user) return errorResponse(res, 'User does not exist.', 404, ':-(');
 
       await update(user, req.body);
 
       return successResponse(res, 'user updated successfully', user, 200);
     } catch (error) {
-      console.log(error);
+      return errorResponse(res, 'Some error occurred', 500, error.message);
     }
   }
 
@@ -51,7 +54,7 @@ class Test {
       // Check if the user already exist in the database
       let user = await find({ email });
 
-      if (user) return res.status(400).send({ Message: 'User already exist' });
+      if (user) return errorResponse(res, 'User already exists.', 400, ':-(');
 
       const hashedPassword = await getEncryptedPassword(password);
 
@@ -87,9 +90,9 @@ class Test {
 
       res.cookie('token', token, { maxAge: 10 * 1000, httpOnly: true }); //10 MINS
 
-      res.status(200).send({ Message: 'User successfully login', token });
+      return successResponse(res, 'User successfully login', token, 200);
     } catch (error) {
-      console.log(error.message);
+      return errorResponse(res, 'Some error occurred', 500, error.message);
     }
   }
 }

@@ -8,7 +8,7 @@ const { find: findUser } = new UserModel();
 const { update, find, create, remove } = new FriendModel();
 const { errorResponse, successResponse } = Tools;
 
-class Test {
+class Friend {
   constructor(...args) {
     this.args = args;
   }
@@ -17,11 +17,11 @@ class Test {
     try {
       const friend = await find({ friendId: req.query.friendId });
       if (!friend || friend.length == 0)
-        return res.status(404).send({ Message: 'Friend does not exist. You might need to add one' });
+        return errorResponse(res, 'Friend does not exist. You might need to add one', 404, ':-(');
 
       return successResponse(res, 'friend(s) retrieved successfully', friend, 200);
     } catch (error) {
-      console.log(error);
+      return errorResponse(res, 'Some error occurred', 500, error.message);
     }
   }
 
@@ -56,26 +56,28 @@ class Test {
     try {
       const friend = await find({ friendId: req.query.friendId });
 
-      (!friend || friend.length === 0) && errorResponse(res, 'no such friend', 400, ':-(');
+      if (!friend || friend.length === 0) return errorResponse(res, 'no such friend', 400, ':-(');
 
       await remove({ friendId: req.query.friendId });
 
       return successResponse(res, 'friend removed successfully', ':-)', 200);
-    } catch (error) {}
+    } catch (error) {
+      return errorResponse(res, 'Some error occurred', 500, error.message);
+    }
   }
 
   async update(req, res) {
     try {
-      const friend = await find({friendId: req.query.friendId});
-      if (!friend) return res.status(404).send({ Message: 'friend does not exist' });
+      const friend = await find({ friendId: req.query.friendId });
+      if (!friend) return errorResponse(res, 'this friend does not exist', 400, ':-(');
 
       await update(friend, req.body);
 
       return successResponse(res, 'updated successfully', friend, 200);
     } catch (error) {
-      console.log(error);
+      return errorResponse(res, 'Some error occurred', 500, error.message);
     }
   }
 }
 
-export default Test;
+export default Friend;

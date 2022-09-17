@@ -5,7 +5,7 @@ import Tools from '../utils';
 import UserModel from '../models/user/user.model';
 
 const { find } = new UserModel(),
-  { errorResponse, successResponse } =
+  { errorResponse } =
   Tools;
 
 class Authenticator {
@@ -29,13 +29,10 @@ class Authenticator {
         req.user = selected;
         next();
       } else {
-        return res.status(401).json('Not Authenticated!');
+        return errorResponse(res, 'Not Authenticated!', 401, ':-(')
       }
     } catch (error) {
-      console.log(error, 'error found');
-      res.status(404).json({
-        message: 'Authentication failed',
-      });
+      return errorResponse(res, 'Authentication failed', 500, error.message);
     }
   }
 }
