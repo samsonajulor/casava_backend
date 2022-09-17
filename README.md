@@ -11,8 +11,8 @@ to get started
 - install dependencies
 `yarn`
 
-start the application
+- start the application
 `yarn start`
 
-check the documentation for the endpoints
+- check the documentation for the endpoints
 [api documentation](https://documenter.getpostman.com/view/18357475/2s7YmrjmPf)
