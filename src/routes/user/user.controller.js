@@ -1,17 +1,17 @@
-import { UserService } from '../service';
-import Tools from '../utils';
+import UserModel from '../../models/user/user.model';
+import Tools from '../../utils';
 
-const { update, findAll, findOne, create, remove } = UserService;
+const { update, find, create, remove } = new UserModel();
 const { getEncryptedPassword, getDecryptedPassword, getRandomNumber, errorResponse, successResponse, createToken } = Tools;
 
-class User {
+class Test {
   constructor(...args) {
     this.args = args;
   }
 
   async remove(req, res) {
     try {
-      const user = await findOne({ email: req.body.email });
+      const user = await find({ email: req.body.email });
 
       !user && errorResponse(res, 'no such user', 400, ':-(');
 
@@ -23,7 +23,7 @@ class User {
 
   async update(req, res) {
     try {
-      const user = await findOne({ userId: req.query.userId });
+      const user = await find({ userId: req.query.userId });
       if (!user) return res.status(404).send({ Message: 'User does not exist' });
 
       await update(user, req.body);
@@ -38,19 +38,20 @@ class User {
     try {
       const { firstName, lastName, email, password } = req.body;
       // Check if the user already exist in the database
-      let user = await findOne({ email });
+      let user = await find({ email });
 
       if (user) return res.status(400).send({ Message: 'User already exist' });
 
-      const hashedPassword = await getEncryptedPassword(password);
+      const hashedPassword = await getEncryptedPassword(password),
+        randomNumber = getRandomNumber();
 
       const newUser = await create({
         firstName,
         lastName,
         email,
+        emailToken: randomNumber.toString(),
         password: hashedPassword,
-        accountId,
-        friendList: []
+        isVerified: false,
       });
 
       return successResponse(res, 'user created successfully', newUser, 201);
@@ -65,7 +66,7 @@ class User {
       const { email, password } = req.body;
 
       // Check if the user already exist in the database
-      const user = await findOne({ email });
+      const user = await find({ email });
       if (!user) return res.status(404).send({ Message: 'User not found' });
 
       // Decrypt the user password and compare
@@ -86,4 +87,4 @@ class User {
   }
 }
 
-export default User;
+export default Test;
