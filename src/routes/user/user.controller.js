@@ -85,8 +85,6 @@ class Test {
 
       const token = createToken(email);
 
-      console.log(token);
-
       res.cookie('token', token, { maxAge: 10 * 1000, httpOnly: true }); //10 MINS
 
       res.status(200).send({ Message: 'User successfully login', token });

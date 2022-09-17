@@ -20,7 +20,6 @@ class User {
         user[input] = payload[input] || user[input];
       }
 
-      console.log(user)
       await user.save();
 
       return user;

@@ -19,7 +19,6 @@ class Account {
   async update(account, payload) {
     try {
       for (const input in payload) {
-        console.log(input, account)
         account[input] = payload[input] || account[input];
       }
 
@@ -47,7 +46,6 @@ class Account {
 
   async remove({ userId, username }) {
     try {
-      console.log(username, "name")
       await AccountMongo.deleteOne({ $or: [{ _id: userId }, { username }] });
     } catch (error) {
       console.log(error);

@@ -52,8 +52,6 @@ class Test {
     try {
       const account = await find({ username: req.body.username });
 
-      console.log(account)
-
       (!account || account.length === 0) && errorResponse(res, 'no such account', 400, ':-(');
 
       await remove({ username: req.body.username });
