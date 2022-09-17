@@ -1,5 +1,5 @@
-import Validations from './validations';
+import UserValidations from './user';
 
-const APIValidations = new Validations();
+const UserAPIValidations = new UserValidations();
 
-export default APIValidations;
+export { UserAPIValidations };

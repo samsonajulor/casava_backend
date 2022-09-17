@@ -3,7 +3,7 @@ import joiDate from '@joi/date';
 
 const joi = Joi.extend(joiDate);
 
-class Validations {
+class AccountValidations {
   constructor(...args) {
     this.args = args;
   }
@@ -12,7 +12,7 @@ class Validations {
    * validate add or update page
    * @param {object} payload
    * @returns {boolean} - returns true if validation is successful
-   * @memberof Validations
+   * @memberof AccountValidations
    */
   async validateUserQuery(payload) {
     const schema = joi.object({
@@ -24,4 +24,4 @@ class Validations {
   }
 };
 
-export default Validations;
+export default AccountValidations;

@@ -7,12 +7,13 @@ import UserController from './user.controller';
 
 const { update, signUp, remove, login, get } = new UserController(),
   userRouter = Router(),
-  { authorize } = AuthenticatorMiddleware;
+  { authorize } = AuthenticatorMiddleware,
+  { inspectDelete, inspectUpdate, inspectLogin, inspectSignup, inspectGetQuery, inspectUpdateQuery } = UserMiddleware;
 
-userRouter.post('/signup', signUp);
-userRouter.post('/login', login);
-userRouter.get('/get', get);
-userRouter.put('/edit', authorize, update);
-userRouter.delete('/del', authorize, remove);
+userRouter.post('/signup', inspectSignup, signUp);
+userRouter.post('/login', inspectLogin, login);
+userRouter.get('/get', authorize, inspectGetQuery, get);
+userRouter.put('/edit', authorize, inspectUpdate, inspectUpdateQuery, update);
+userRouter.delete('/del', authorize, inspectDelete, remove);
 
 export default userRouter;
