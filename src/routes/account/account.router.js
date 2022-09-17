@@ -7,11 +7,12 @@ import AccountController from './account.controller';
 
 const { update, remove, create, get } = new AccountController(),
   accountRouter = Router(),
-  { authorize } = AuthenticatorMiddleware;
+  { authorize } = AuthenticatorMiddleware,
+  { inspectDelete, inspectGetQuery, inspectUpdate, inspectUpdateQuery, inspectCreate } = AccountMiddleware;
 
-accountRouter.post('/create', authorize, create);
-accountRouter.put('/edit', authorize, update);
-accountRouter.get('/get', authorize, get);
-accountRouter.delete('/del', authorize, remove);
+accountRouter.post('/create', authorize, inspectCreate, create);
+accountRouter.put('/edit', authorize, inspectUpdate, inspectUpdateQuery, update);
+accountRouter.get('/get', authorize, inspectGetQuery, get);
+accountRouter.delete('/del', authorize, inspectDelete, remove);
 
 export default accountRouter;
