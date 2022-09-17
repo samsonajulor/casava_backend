@@ -7,9 +7,9 @@ class Account {
     this.args = args;
   }
 
-  async find({ accountId, username }) {
+  async find(accountId) {
     try {
-      const account = await AccountMongo.findOne({ $or: [{ _id: accountId }, { username }] });
+      const account = await AccountMongo.findOne({ _id: accountId });
       return account;
     } catch (err) {
       console.error(err);

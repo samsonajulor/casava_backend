@@ -1,9 +1,11 @@
-import UserModel from '../../models/user/user.model';
 import AccountModel from '../../models/account/account.model';
+import FriendModel from '../../models/friend/friend.model';
+import UserModel from '../../models/user/user.model';
 import Tools from '../../utils';
 
+const { find: findAccount } = new AccountModel();
 const { find: findUser } = new UserModel();
-const { update, find, create, remove } = new AccountModel();
+const { update, find, create, remove } = new FriendModel();
 const { errorResponse, successResponse } = Tools;
 
 class Test {
@@ -13,17 +15,22 @@ class Test {
 
   async create(req, res) {
     try {
-      const { fullName, isFavorite, canViewStatus, accountId } = req.body;
+      const { userId, accountId } = req.body;
 
       // Check if the user already exist in the database
       let account = await findAccount({ accountId });
+      let user = await findUser({ userId });
 
-      if (!account) return res.status(400).send({ Message: 'Account does not exist' });
+      if (!account) return errorResponse(res, 'Account does not exist', 400, ':-(');
+      if (!user) return errorResponse(res, 'User does not exist', 400, ':-(');
+      if (user._id === account.userId) return errorResponse(res, 'You own this account', 500, ':-(');
 
       const newFriend = await create({
-        fullName,
-        isFavorite,
-        canViewStatus,
+        accountId,
+        userId,
+        fullName: `&{user.firstName} ${user.lastName}`,
+        isFavorite: false,
+        canViewStatus: false,
       });
 
       return successResponse(res, 'account created successfully', newFriend, 201);

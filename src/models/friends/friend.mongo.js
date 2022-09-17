@@ -19,6 +19,7 @@ const AccountSchema = new Schema({
     required: [true, 'isFavorite is required'],
   },
   accountId: { type: Schema.Types.ObjectId, ref: 'Account' },
+  userId: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
 export default model('Account', AccountSchema);
