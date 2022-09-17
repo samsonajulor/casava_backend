@@ -1,5 +1,3 @@
-import { post } from 'axios';
-
 import UserMongo from './user.mongo';
 
 class User {
@@ -18,8 +16,8 @@ class User {
 
   async update(user, payload) {
     try {
-      for (input in payload) {
-        user[input] = input || user[input];
+      for (const input in payload) {
+        user[input] = payload[input] || user[input];
       }
 
       await user.save();

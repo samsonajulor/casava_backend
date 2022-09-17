@@ -7,11 +7,11 @@ import UserController from './user.controller';
 
 const { update, signUp, remove, login } = new UserController(),
   userRouter = Router(),
-  { authorize } = AuthenticatorMiddleware;;
+  { authorize } = AuthenticatorMiddleware;
 
-  userRouter.post('/signup', signUp);
+userRouter.post('/signup', signUp);
+userRouter.post('/login', login);
 userRouter.put('/edit', authorize, update);
-userRouter.post('/login', authorize, login);
 userRouter.delete('/del', authorize, remove);
 
 export default userRouter;

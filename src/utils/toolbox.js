@@ -16,7 +16,7 @@ class Tools {
   createToken(email) {
     const payload = { email };
 
-    const token = jwt.sign(payload, env.SESSION_SECRET, { expiresIn: '86400s' });
+    const token = jwt.sign(payload, env.SESSION_SECRET);
 
     return token;
   }

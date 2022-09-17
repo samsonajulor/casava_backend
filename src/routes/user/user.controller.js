@@ -42,16 +42,14 @@ class Test {
 
       if (user) return res.status(400).send({ Message: 'User already exist' });
 
-      const hashedPassword = await getEncryptedPassword(password),
-        randomNumber = getRandomNumber();
+      const hashedPassword = await getEncryptedPassword(password);
 
       const newUser = await create({
         firstName,
         lastName,
         email,
-        emailToken: randomNumber.toString(),
         password: hashedPassword,
-        isVerified: false,
+        accountId: '',
       });
 
       return successResponse(res, 'user created successfully', newUser, 201);
