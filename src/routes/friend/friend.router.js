@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { AuthenticatorMiddleware } from '../../middleware';
 import { FriendMiddleware } from '../../middleware';
 
-import FriendController from './friends.controller';
+import FriendController from './friend.controller';
 
 const { update, remove, create } = new FriendController(),
   friendRouter = Router(),

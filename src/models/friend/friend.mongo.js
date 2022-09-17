@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-const AccountSchema = new Schema({
+const FriendSchema = new Schema({
   fullName: {
     type: String,
     trim: true,
@@ -22,4 +22,4 @@ const AccountSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
-export default model('Account', AccountSchema);
+export default model('Friend', FriendSchema);
