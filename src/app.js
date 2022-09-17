@@ -29,7 +29,7 @@ app.use(json());
 app.use('/v1', api);
 
 app.get('/', (req, res) => {
-  res.send('Welcome to cassava');
+  res.send('Welcome to casava');
 });
 
 // catch 404 and forward to error handler

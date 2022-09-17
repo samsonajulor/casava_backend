@@ -10,7 +10,7 @@
     "test-watch": "jest --watch",
     "dev": "nodemon --exec babel-node ./src/server.js",
     "build": "babel src -d dist",
-    "start": "node dist/server.js"
+    "start": "Cl= node dist/server.js"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
