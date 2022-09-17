@@ -12,7 +12,7 @@ const { update, remove, create, get } = new FriendController(),
 
 friendRouter.post('/create', authorize, inspectCreate, create);
 friendRouter.get('/get', authorize, inspectGetQuery, get);
-friendRouter.put('/edit', authorize, inspectUpdate, inspectUpdateQuery, update);
+friendRouter.put('/edit', authorize, inspectUpdateQuery, inspectUpdate, update);
 friendRouter.delete('/del', authorize, inspectDelete, remove);
 
 export default friendRouter;

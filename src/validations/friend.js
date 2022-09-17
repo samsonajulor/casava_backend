@@ -31,7 +31,7 @@ class FriendValidations {
    */
   async validateUpdateQuery(payload) {
     const schema = joi.object({
-      friendId: joi.string().required().label('invalid or missing account id'),
+      friendId: joi.string().required().label('invalid or missing friend id'),
     });
     const { error } = schema.validate(payload);
     if (error) throw error.details[0].context.label;
@@ -62,8 +62,8 @@ class FriendValidations {
    */
   async validateUpdate(payload) {
     const schema = joi.object({
-      canViewStatus: joi.string().required().label('invalid or missing canViewStatus'),
-      isFavorite: joi.string().required().label('invalid or missing isFavorite'),
+      canViewStatus: joi.boolean().required().label('invalid or missing canViewStatus. It should be a boolean value'),
+      isFavorite: joi.boolean().required().label('invalid or missing isFavorite. It should be a boolean value'),
     });
     const { error } = schema.validate(payload);
     if (error) throw error.details[0].context.label;
