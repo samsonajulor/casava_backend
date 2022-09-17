@@ -13,6 +13,18 @@ class Test {
     this.args = args;
   }
 
+  async get(req, res) {
+    try {
+      const friend = await find({ friendId: req.query.friendId });
+      if (!friend || friend.length == 0)
+        return res.status(404).send({ Message: 'Friend does not exist. You might need to add one' });
+
+      return successResponse(res, 'friend(s) retrieved successfully', friend, 200);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async create(req, res) {
     try {
       const { userId, accountId } = req.body;
@@ -21,11 +33,10 @@ class Test {
       let account = await findAccount({ accountId });
       let user = await findUser({ userId });
 
-      console.log(user, account)
-
       if (!account) return errorResponse(res, 'Account does not exist', 400, ':-(');
       if (!user) return errorResponse(res, 'User does not exist', 400, ':-(');
-      if (user._id.toString() === account.userId.toString()) return errorResponse(res, 'You own this account', 500, ':-(');
+      if (user._id.toString() === account.userId.toString())
+        return errorResponse(res, 'You own this account', 500, ':-(');
 
       const newFriend = await create({
         accountId,
@@ -43,11 +54,11 @@ class Test {
 
   async remove(req, res) {
     try {
-      const friend = await find({ id: req.query.id });
+      const friend = await find({ friendId: req.query.friendId });
 
-      !friend && errorResponse(res, 'no such friend', 400, ':-(');
+      (!friend || friend.length === 0) && errorResponse(res, 'no such friend', 400, ':-(');
 
-      await remove({ id: req.query.id });
+      await remove({ friendId: req.query.friendId });
 
       return successResponse(res, 'friend removed successfully', ':-)', 200);
     } catch (error) {}
@@ -55,7 +66,7 @@ class Test {
 
   async update(req, res) {
     try {
-      const friend = await find(req.query.id);
+      const friend = await find({friendId: req.query.friendId});
       if (!friend) return res.status(404).send({ Message: 'friend does not exist' });
 
       await update(friend, req.body);

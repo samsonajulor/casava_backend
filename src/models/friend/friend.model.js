@@ -7,9 +7,10 @@ class Friend {
     this.args = args;
   }
 
-  async find(friendId) {
+  async find({ friendId }) {
     try {
-      const friend = await FriendMongo.findOne({ _id: friendId });
+      console.log(friendId)
+      const friend = friendId ? await FriendMongo.findOne({ _id: friendId }) : await FriendMongo.find();
       return friend;
     } catch (err) {
       console.error(err);

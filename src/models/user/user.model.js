@@ -7,7 +7,7 @@ class User {
 
   async find({ userId, email }) {
     try {
-      const profile = await UserMongo.findOne({ $or: [{ _id: userId }, { email }] });
+      const profile = userId || email ? await UserMongo.findOne({ $or: [{ _id: userId }, { email }] }) : await UserMongo.find();
       return profile;
     } catch (err) {
       console.error(err);
@@ -20,6 +20,7 @@ class User {
         user[input] = payload[input] || user[input];
       }
 
+      console.log(user)
       await user.save();
 
       return user;

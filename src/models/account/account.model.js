@@ -9,7 +9,7 @@ class Account {
 
   async find({ accountId, username }) {
     try {
-      const account = await AccountMongo.findOne({ $or: [{ _id: accountId }, { username }] });
+      const account = accountId || username ? await AccountMongo.findOne({ $or: [{ _id: accountId }, { username }] }) : await AccountMongo.find();
       return account;
     } catch (err) {
       console.error(err);
@@ -47,6 +47,7 @@ class Account {
 
   async remove({ userId, username }) {
     try {
+      console.log(username, "name")
       await AccountMongo.deleteOne({ $or: [{ _id: userId }, { username }] });
     } catch (error) {
       console.log(error);

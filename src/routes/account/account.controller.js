@@ -11,14 +11,29 @@ class Test {
     this.args = args;
   }
 
+  async get(req, res) {
+    try {
+      const account = await find({ accountId: req.query.accountId });
+      if (!account || account.length == 0)
+        return res.status(404).send({ Message: 'Account does not exist. You might need to create one' });
+
+      return successResponse(res, 'account(s) retrieved successfully', account, 200);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async create(req, res) {
     try {
       const { status, username, userId } = req.body;
 
       // Check if the user already exist in the database
       let user = await findUser({ userId });
+      if (user._id.toString() !== userId) return res.status(400).send({ Message: 'No such user' });
 
-      if (!user) return res.status(400).send({ Message: 'User does not exist' });
+      // Check if the username already exist in the database
+      let oldAccount = await find({ username });
+      if (oldAccount) return res.status(400).send({ Message: 'Username is taken' });
 
       const newAccount = await create({
         status,
@@ -37,7 +52,9 @@ class Test {
     try {
       const account = await find({ username: req.body.username });
 
-      !account && errorResponse(res, 'no such account', 400, ':-(');
+      console.log(account)
+
+      (!account || account.length === 0) && errorResponse(res, 'no such account', 400, ':-(');
 
       await remove({ username: req.body.username });
 
@@ -48,8 +65,8 @@ class Test {
   async update(req, res) {
     try {
       const account = await find({ accountId: req.query.accountId });
-      console.log(req.body, 'req body');
-      if (!account) return res.status(404).send({ Message: 'Account does not exist' });
+
+      if (!account || req.query.accountId !== account._id.toString()) return res.status(404).send({ Message: 'Account does not exist' });
 
       await update(account, req.body);
 

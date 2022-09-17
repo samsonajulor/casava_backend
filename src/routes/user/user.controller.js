@@ -2,18 +2,29 @@ import UserModel from '../../models/user/user.model';
 import Tools from '../../utils';
 
 const { update, find, create, remove } = new UserModel();
-const { getEncryptedPassword, getDecryptedPassword, getRandomNumber, errorResponse, successResponse, createToken } = Tools;
+const { getEncryptedPassword, getDecryptedPassword, errorResponse, successResponse, createToken } = Tools;
 
 class Test {
   constructor(...args) {
     this.args = args;
   }
 
+  async get(req, res) {
+    try {
+      const user = await find({ userId: req.query.userId });
+      if (!user || user.length == 0) return res.status(404).send({ Message: 'User does not exist. You might need to create one' });
+
+      return successResponse(res, 'user(s) retrieved successfully', user, 200);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async remove(req, res) {
     try {
       const user = await find({ email: req.body.email });
 
-      !user && errorResponse(res, 'no such user', 400, ':-(');
+      (!user || user.length == 0) && errorResponse(res, 'no such user', 400, ':-(');
 
       await remove({ email: req.body.email });
 
@@ -74,7 +85,7 @@ class Test {
 
       const token = createToken(email);
 
-      console.log(token)
+      console.log(token);
 
       res.cookie('token', token, { maxAge: 10 * 1000, httpOnly: true }); //10 MINS
 
